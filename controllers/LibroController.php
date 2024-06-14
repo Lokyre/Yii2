@@ -31,6 +31,7 @@ class LibroController extends ActiveController
             'create' => ['POST'],
             'update' => ['PUT', 'PATCH'],
             'delete' => ['DELETE'],
+            'add-author' => ['PUT'],
         ];
     }
 
@@ -39,6 +40,18 @@ class LibroController extends ActiveController
     {
         return Libro::find()->all();
     }
+
+    // Método para encontrar un libro por su ID y lanzar una excepción si no se encuentra
+    protected function findModel($id)
+    {
+        $model = Libro::findOne($id);
+        if ($model !== null) {
+            return $model;
+        } else {
+            throw new \yii\web\NotFoundHttpException('El libro solicitado no existe.');
+        }
+    }
+
     public function actionView($id)
     {
         $model = $this->findModel($id);
@@ -85,6 +98,28 @@ class LibroController extends ActiveController
             return 'Libro eliminado correctamente.';
         } else {
             return 'Libro no encontrado.';
+        }
+    }
+
+    // Método adicional para agregar un autor a un libro
+    public function actionAddAuthor($id)
+    {
+        $libro = $this->findModel($id);
+        $autorId = Yii::$app->request->bodyParams['autor_id'];
+    
+        $autores = is_array($libro->autores) ? $libro->autores : [];
+        if (!in_array($autorId, $autores)) {
+            $autores[] = $autorId;
+            $libro->autores = $autores;
+        }
+    
+        // Establece el escenario de actualización antes de guardar
+        $libro->scenario = Libro::SCENARIO_UPDATE;
+    
+        if ($libro->save()) {
+            return $libro;
+        } else {
+            return ['errors' => $libro->errors];
         }
     }
 

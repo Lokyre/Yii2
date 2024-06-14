@@ -19,6 +19,11 @@ $config = [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
+        'response' => [
+            'format' => \yii\web\Response::FORMAT_JSON,
+            'charset' => 'UTF-8',
+            // Otras configuraciones necesarias...
+        ],
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
             'dsn' => 'mongodb://localhost:27017/yiibd',
@@ -54,20 +59,20 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                // ['class' => 'yii\rest\UrlRule', 'controller' => 'libro'],
+                // Rutas para el controlador Libro
                 'POST libro' => 'libro/create', // Esto mapea las solicitudes POST a /libros a actionCreate en LibroController
                 'GET libro' => 'libro/index', // Esto mapea las solicitudes GET a /libros a actionIndex en LibroController
                 'GET libro/<id:[a-f0-9]{24}>' => 'libro/view',
                 'PUT libro/<id:[a-f0-9]{24}>' => 'libro/update', // Esto mapea las solicitudes PUT a /libros/1 a actionUpdate en LibroController
                 'DELETE libro/<id:[a-f0-9]{24}>' => 'libro/delete',
+                'PUT libro/<id>/add-author' => 'libro/add-author',
 
+                // Rutas para el controlador Autor
                 'POST autor' => 'autor/create',
                 'GET autor' => 'autor/index',
                 'GET autor/<id:[a-f0-9]{24}>' => 'autor/view',
                 'PUT autor/<id:[a-f0-9]{24}>' => 'autor/update',
                 'DELETE autor/<id:[a-f0-9]{24}>' => 'autor/delete',
-                // ['class' => 'yii\rest\UrlRule', 'controller' => 'autor'],
-                // ['class' => 'yii\rest\UrlRule', 'controller' => 'autor-libro'],
             ],
         ],
 

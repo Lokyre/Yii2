@@ -18,6 +18,15 @@ class AutorController extends ActiveController
         return $behaviors;
     }
 
+    protected function findModel($id)
+    {
+        if (($model = Autor::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new \yii\web\NotFoundHttpException('Autor no encontrado');
+    }
+
     public function verbs()
     {
         return [
@@ -34,22 +43,13 @@ class AutorController extends ActiveController
         return Autor::find()->all();
     }
 
-    private function findModel($id)
-    {
-        if (is_numeric($id)) {
-            return Autor::findOne(['_id' => intval($id)]);
-        } else {
-            return Autor::findOne(['_id' => new \MongoDB\BSON\ObjectId($id)]);
-        }
-    }
-
     public function actionView($id)
     {
-        $model = $this->findModel($id);
-        if ($model !== null) {
+        try {
+            $model = $this->findModel($id);
             return $model;
-        } else {
-            throw new \yii\web\NotFoundHttpException("Object not found: $id");
+        } catch (\Exception $e) {
+            throw new \yii\web\NotFoundHttpException('El autor solicitado no se encuentra disponible.');
         }
     }
 
@@ -81,12 +81,13 @@ class AutorController extends ActiveController
 
     public function actionDelete($id)
     {
-        $model = $this->findModel($id);
+        $model = Autor::findOne($id);
         if ($model !== null) {
             $model->delete();
             return ['status' => 'Autor eliminado correctamente.'];
         } else {
-            throw new \yii\web\NotFoundHttpException("Autor con ID $id no encontrado.", 404);
+            throw new \yii\web\NotFoundHttpException("Autor con ID $id no encontrado.");
         }
     }
+    
 }
