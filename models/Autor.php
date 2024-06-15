@@ -31,11 +31,6 @@ class Autor extends ActiveRecord
         return $this->hasMany(Libro::className(), ['_id' => 'libro_id'])->via('librosEscritosRelacion');
     }
 
-    public function getLibrosEscritosRelacion()
-    {
-        return $this->hasMany(AutorLibro::className(), ['autor_id' => '_id']);
-    }
-
     public function messages()
     {
         return [

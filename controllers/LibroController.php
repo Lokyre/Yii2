@@ -17,9 +17,9 @@ class LibroController extends ActiveController
         $behaviors = parent::behaviors();
         $behaviors['contentNegotiator']['formats']['application/json'] = Response::FORMAT_JSON;
         // Añadir autenticación si es necesaria
-        // $behaviors['authenticator'] = [
-        //     'class' => HttpBearerAuth::className(),
-        // ];
+         $behaviors['authenticator'] = [
+             'class' => HttpBearerAuth::className(),
+         ];
         return $behaviors;
     }
 

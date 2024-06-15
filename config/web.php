@@ -19,21 +19,29 @@ $config = [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
+        'mongodb' => [
+            'class' => '\yii\mongodb\Connection',
+            'dsn' => 'mongodb://localhost:27017/yiibd',
+        ],
+        'auth' => [
+            'class' => 'app\components\AuthComponent',
+        ],
         'response' => [
             'format' => \yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
             // Otras configuraciones necesarias...
         ],
-        'mongodb' => [
-            'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://localhost:27017/yiibd',
-        ],
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
+        'jwt' => [
+            'class' => 'sizeg\jwt\Jwt',
+            'jwtKey' => '89M+yJYt5DnEGHhrMIT0QKaG9AcKWy6TlOquL0j+hes=', // Clave secreta para firmar el token
         ],
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            'enableSession' => false, // Desactiva las sesiones si solo usas tokens JWT
+        ],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -59,6 +67,10 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // Rutas para el controlador Auth
+                'POST auth/login' => 'auth/login',
+                'POST auth/create' => 'auth/create',
+
                 // Rutas para el controlador Libro
                 'POST libro' => 'libro/create', // Esto mapea las solicitudes POST a /libros a actionCreate en LibroController
                 'GET libro' => 'libro/index', // Esto mapea las solicitudes GET a /libros a actionIndex en LibroController

@@ -18,6 +18,9 @@ Either run
 
 ```
 composer require yiisoft/yii2
+composer require lcobucci/jwt
+composer require mdanter/ecc
+
 ```
 
 or add
