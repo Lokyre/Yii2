@@ -5,6 +5,7 @@ namespace app\components;
 use Yii;
 use yii\base\Component;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use yii\web\UnauthorizedHttpException;
 
 class AuthComponent extends Component
@@ -18,7 +19,7 @@ class AuthComponent extends Component
     public function generateToken($userId)
     {
         $issuedAt = time();
-        $expirationTime = $issuedAt + 1800;  // 30 minutos de tiempo de expiración
+        $expirationTime = $issuedAt + self::EXPIRATION_TIME;  // 30 minutos de tiempo de expiración
         $payload = array(
             'iat' => $issuedAt,
             'exp' => $expirationTime,
@@ -30,8 +31,8 @@ class AuthComponent extends Component
     public function validateToken($token)
     {
         try {
-            JWT::decode($token, $this->secretKey, array($this->algorithm));
-            return true;
+            $decoded = JWT::decode($token, new Key($this->secretKey, $this->algorithm));
+            return (array) $decoded;
         } catch (\Exception $e) {
             return false;
         }

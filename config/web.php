@@ -19,27 +19,32 @@ $config = [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
+        // Configuración para la base de datos MongoDB
         'mongodb' => [
             'class' => '\yii\mongodb\Connection',
             'dsn' => 'mongodb://localhost:27017/yiibd',
         ],
+        // Configuración para el componente Auth
         'auth' => [
             'class' => 'app\components\AuthComponent',
         ],
+        // Configuración para el componente JWT
         'response' => [
             'format' => \yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
-            // Otras configuraciones necesarias...
         ],
+        // Configuración para el componente JWT
         'jwt' => [
             'class' => 'sizeg\jwt\Jwt',
             'jwtKey' => '89M+yJYt5DnEGHhrMIT0QKaG9AcKWy6TlOquL0j+hes=', // Clave secreta para firmar el token
         ],
+        // Configuración para el componente de autenticación
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
             'enableSession' => false, // Desactiva las sesiones si solo usas tokens JWT
         ],
+        // Configuracion para cache
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],

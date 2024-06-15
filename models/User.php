@@ -54,8 +54,11 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        // Implementar la búsqueda de la identidad usando el token
-        // En este caso, no usaremos tokens de acceso directamente, sino JWT
+        $authComponent = new \app\components\AuthComponent();
+        $decoded = $authComponent->validateToken($token);
+        if ($decoded) {
+            return static::findOne($decoded['userId']);
+        }
         return null;
     }
 

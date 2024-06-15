@@ -5,21 +5,22 @@ namespace app\controllers;
 use Yii;
 use app\models\Libro;
 use yii\rest\ActiveController;
-use yii\web\Response;
 use yii\filters\auth\HttpBearerAuth; // Importa esto si estás usando autenticación bearer token
 
 class LibroController extends ActiveController
 {
     public $modelClass = 'app\models\Libro';
 
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['contentNegotiator']['formats']['application/json'] = Response::FORMAT_JSON;
+        // unset($behaviors['authenticator']); // Quita el autenticador de la clase ActiveController
+        // $behaviors['contentNegotiator']['formats']['application/json'] = Response::FORMAT_JSON;
         // Añadir autenticación si es necesaria
-         $behaviors['authenticator'] = [
-             'class' => HttpBearerAuth::className(),
-         ];
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::class,
+        ];
         return $behaviors;
     }
 
@@ -35,9 +36,9 @@ class LibroController extends ActiveController
         ];
     }
 
-
     public function actionIndex()
     {
+        // Retornar todos los libros
         return Libro::find()->all();
     }
 
@@ -106,16 +107,16 @@ class LibroController extends ActiveController
     {
         $libro = $this->findModel($id);
         $autorId = Yii::$app->request->bodyParams['autor_id'];
-    
+
         $autores = is_array($libro->autores) ? $libro->autores : [];
         if (!in_array($autorId, $autores)) {
             $autores[] = $autorId;
             $libro->autores = $autores;
         }
-    
+
         // Establece el escenario de actualización antes de guardar
         $libro->scenario = Libro::SCENARIO_UPDATE;
-    
+
         if ($libro->save()) {
             return $libro;
         } else {
